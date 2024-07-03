@@ -41,13 +41,13 @@ app
         })
     })
 
-mongoose.connect("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.1" || "", {
+mongoose.connect("mongodb://admin:RootVince@172.232.23.153:27017/test?authSource=admin" || "", {
     family: 4,
     serverSelectionTimeoutMS: 5000,
 })
     .then(() => {
-        server.listen(process.env.PORT || 4000, () => {
-            console.log("Server is running on port", process.env.PORT || 4000);
+        server.listen(process.env.PORT || 5050, () => {
+            console.log("Server is running on port", process.env.PORT || 5050);
         })
     })
     .catch((err) => {
