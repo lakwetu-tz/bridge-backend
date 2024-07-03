@@ -27,19 +27,19 @@ const mongoose_1 = __importStar(require("mongoose"));
 const BridgeLogsSchema = new mongoose_1.Schema({
     deviceId: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     wgt: {
-        type: Number,
+        type: String,
         required: false,
     },
     vib: {
-        type: Number,
+        type: String,
         required: false,
     },
     temp: {
-        type: Number,
+        type: String,
         required: false
     },
     createdAt: { type: Date, default: () => new Date() },

@@ -146,6 +146,7 @@ exports.deleteBridge = deleteBridge;
 const entries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { deviceId, wgt, vib, temp } = req.body;
+        console.log(req.body);
         // // Find the bridge by ID
         //  const bridge = await Bridge.findById(id);
         //  if (!bridge) {
