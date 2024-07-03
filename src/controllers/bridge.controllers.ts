@@ -161,6 +161,8 @@ export const entries = async (req: Request, res: Response) => {
     try {
         const { deviceId, wgt, vib, temp } = req.body;
 
+        console.log(req.body)
+
         // // Find the bridge by ID
         //  const bridge = await Bridge.findById(id);
         //  if (!bridge) {

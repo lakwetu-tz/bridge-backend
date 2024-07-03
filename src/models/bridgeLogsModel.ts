@@ -3,19 +3,19 @@ import mongoose, { Schema, } from 'mongoose';
 const BridgeLogsSchema: Schema = new Schema({
     deviceId: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     wgt: {
-        type: Number,
+        type: String,
         required: false,
     },
     vib: {
-        type: Number,
+        type: String,
         required: false,
     },
     temp: {
-        type: Number,
+        type: String,
         required: false
     },
     createdAt: { type: Date, default: () => new Date() },
