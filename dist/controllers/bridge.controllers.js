@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.entries = exports.deleteBridge = exports.updateBridge = exports.getBridgeById = exports.getAllBridges = exports.createBridge = void 0;
 const bridgeModel_1 = __importDefault(require("../models/bridgeModel"));
-const bridgeLogsModel_1 = __importDefault(require("../models/bridgeLogsModel"));
+const logsModel_1 = __importDefault(require("../models/logsModel"));
 // create bridge
 const createBridge = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -41,7 +41,7 @@ const createBridge = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         // Save the bridge to the database
         const savedBridge = yield newBridge.save();
         // Create a log entry for the bridge creation
-        const logEntry = new bridgeLogsModel_1.default({
+        const logEntry = new logsModel_1.default({
             bridgeId: savedBridge._id,
             action: 'Created',
             timestamp: new Date(),
@@ -101,7 +101,7 @@ const updateBridge = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         // Save the updated bridge to the database
         const updatedBridge = yield bridge.save();
         // Create a log entry for the bridge update
-        const logEntry = new bridgeLogsModel_1.default({
+        const logEntry = new logsModel_1.default({
             bridgeId: updatedBridge._id,
             action: 'Updated',
             timestamp: new Date(),
@@ -127,7 +127,7 @@ const deleteBridge = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         // Delete the bridge from the database
         yield bridgeModel_1.default.findByIdAndDelete(req.params.id);
         // Create a log entry for the bridge deletion
-        const logEntry = new bridgeLogsModel_1.default({
+        const logEntry = new logsModel_1.default({
             bridgeId: bridge._id,
             action: 'Deleted',
             timestamp: new Date(),
@@ -146,30 +146,30 @@ exports.deleteBridge = deleteBridge;
 const entries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { deviceId, wgt, vib, temp } = req.body;
-        console.log(req.body);
-        // // Find the bridge by ID
-        //  const bridge = await Bridge.findById(id);
-        //  if (!bridge) {
-        //      return res.status(404).json({ message: 'Bridge not found' });
-        //  }
-        // create entries on Log model
-        const entry = new bridgeLogsModel_1.default({
+        // Log the request body for debugging
+        // console.log('Request Body:', req.body);
+        // Create a new log entry
+        const entry = new logsModel_1.default({
             deviceId,
-            timestamp: new Date(),
-            weight: wgt,
-            vibration: vib,
-            temperature: temp,
+            wgt,
+            vib: vib,
+            temp: temp,
+            timestamp: new Date()
         });
-        // save entries to the database
-        yield entry.save();
-        // open socket and emit data
-        if (entry) {
-            req.app.get('io').emit('data-logs', entry);
+        // Log the entry before saving
+        // console.log('Log Entry Before Save:', entry);
+        // Save the log entry to the database
+        const savedEntry = yield entry.save();
+        // console.log('jksjdks:', savedEntry);
+        // Emit the new log entry via WebSocket
+        if (savedEntry) {
+            req.app.get('io').emit('data-logs', req.body);
         }
-        res.status(200).json({ status: "Ok", message: "entry successfully sent", data: entry });
+        // Send a success response
+        res.status(200).json({ status: "Ok", message: "Entry successfully sent", data: savedEntry });
     }
     catch (error) {
-        console.error(error);
+        console.error('Error Saving Log Entry:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
