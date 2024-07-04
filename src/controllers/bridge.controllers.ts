@@ -162,7 +162,7 @@ export const entries = async (req: Request, res: Response) => {
         const { deviceId, wgt, vib, temp } = req.body;
 
         // Log the request body for debugging
-        // console.log('Request Body:', req.body);
+        console.log('Request Body:', req.body);
 
         // Create a new log entry
         const entry = new Logs({
@@ -170,7 +170,7 @@ export const entries = async (req: Request, res: Response) => {
             wgt,
             vib: vib,
             temp: temp,
-            timestamp: new Date()
+            createAt: new Date()
         });
 
         // Log the entry before saving
@@ -183,7 +183,7 @@ export const entries = async (req: Request, res: Response) => {
 
         // Emit the new log entry via WebSocket
         if (savedEntry) {
-            req.app.get('io').emit('data-logs', req.body);
+            req.app.get('io').emit('data-logs', savedEntry);
         }
 
         // Send a success response

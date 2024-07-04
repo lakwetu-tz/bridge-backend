@@ -147,14 +147,14 @@ const entries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { deviceId, wgt, vib, temp } = req.body;
         // Log the request body for debugging
-        // console.log('Request Body:', req.body);
+        console.log('Request Body:', req.body);
         // Create a new log entry
         const entry = new logsModel_1.default({
             deviceId,
             wgt,
             vib: vib,
             temp: temp,
-            timestamp: new Date()
+            createAt: new Date()
         });
         // Log the entry before saving
         // console.log('Log Entry Before Save:', entry);
@@ -163,7 +163,7 @@ const entries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         // console.log('jksjdks:', savedEntry);
         // Emit the new log entry via WebSocket
         if (savedEntry) {
-            req.app.get('io').emit('data-logs', req.body);
+            req.app.get('io').emit('data-logs', savedEntry);
         }
         // Send a success response
         res.status(200).json({ status: "Ok", message: "Entry successfully sent", data: savedEntry });
