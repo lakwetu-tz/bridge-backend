@@ -25,6 +25,9 @@ const LogSchema: Schema = new Schema({
     createdAt: { type: Date, default: () => new Date() },
     updatedAt: { type: Date, default: () => new Date() },
 
-},)
+},
+{
+    timestamps: true
+})
 
 export default mongoose.model('Logs', LogSchema);
