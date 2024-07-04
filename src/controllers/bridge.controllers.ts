@@ -159,14 +159,14 @@ export const deleteBridge = async (req: Request, res: Response) => {
 
 export const entries = async (req: Request, res: Response) => {
     try {
-        const { deviceId, wgt, vib, temp } = req.body;
+        const { id, wgt, vib, temp } = req.body;
 
         // Log the request body for debugging
         console.log('Request Body:', req.body);
 
         // Create a new log entry
         const entry = new Logs({
-            deviceId,
+            id,
             wgt,
             vib: vib,
             temp: temp,

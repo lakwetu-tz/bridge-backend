@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 const LogSchema: Schema = new Schema({
-    deviceId: {
+    id: {
         type: String,
         required: true,
         trim: true,
