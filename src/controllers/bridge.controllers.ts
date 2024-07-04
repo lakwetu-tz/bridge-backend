@@ -2,7 +2,7 @@
 import express, { Request, Response } from 'express'
 
 import Bridge from '../models/bridgeModel';
-import Logs from '../models/bridgeLogsModel';
+import Logs from '../models/logsModel';
 
 // create bridge
 
@@ -161,34 +161,35 @@ export const entries = async (req: Request, res: Response) => {
     try {
         const { deviceId, wgt, vib, temp } = req.body;
 
-        console.log(req.body)
+        // Log the request body for debugging
+        // console.log('Request Body:', req.body);
 
-        // // Find the bridge by ID
-        //  const bridge = await Bridge.findById(id);
-        //  if (!bridge) {
-        //      return res.status(404).json({ message: 'Bridge not found' });
-        //  }
+        // Create a new log entry
+        const entry = new Logs({
+            deviceId,
+            wgt,
+            vib: vib,
+            temp: temp,
+            timestamp: new Date()
+        });
 
-         // create entries on Log model
-         const entry = new Logs({
-              deviceId,
-              timestamp: new Date(),
-              weight: wgt,
-              vibration: vib,
-              temperature: temp,
-          });
+        // Log the entry before saving
+        // console.log('Log Entry Before Save:', entry);
 
-          // save entries to the database
-          await entry.save();
+        // Save the log entry to the database
+        const savedEntry = await entry.save();
 
-          // open socket and emit data
-          if (entry){
-            req.app.get('io').emit('data-logs', entry);
-          }
+        // console.log('jksjdks:', savedEntry);
 
-        res.status(200).json({ status: "Ok", message: "entry successfully sent", data: entry});
+        // Emit the new log entry via WebSocket
+        if (savedEntry) {
+            req.app.get('io').emit('data-logs', req.body);
+        }
+
+        // Send a success response
+        res.status(200).json({ status: "Ok", message: "Entry successfully sent", data: savedEntry });
     } catch (error) {
-        console.error(error);
+        console.error('Error Saving Log Entry:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
