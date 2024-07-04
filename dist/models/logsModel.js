@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const LogSchema = new mongoose_1.Schema({
-    deviceId: {
+    id: {
         type: String,
         required: true,
         trim: true,
